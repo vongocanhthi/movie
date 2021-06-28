@@ -74,6 +74,12 @@ flutter:
      - family: OpenSans Regular
        fonts:
          - asset: assets/fonts/opensans/OpenSans-Regular.ttf
+     - family: OpenSans Bold
+       fonts:
+         - asset: assets/fonts/opensans/OpenSans-Bold.ttf
+     - family: OpenSans Italic
+       fonts:
+         - asset: assets/fonts/opensans/OpenSans-Italic.ttf
      - family: OpenSans SemiBold
        fonts:
          - asset: assets/fonts/opensans/OpenSans-SemiBold.ttf
