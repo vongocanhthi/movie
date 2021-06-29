@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/Util/util.dart';
 import 'package:movie/features/api/api_manager.dart';
-import 'package:movie/features/model/registry.dart';
+import 'package:movie/features/model/response.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -182,20 +182,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                 _password.isNotEmpty &&
                                 _confirm_password.isNotEmpty &&
                                 _confirm_password == _password) {
-                              print(_name);
-                              print(_email);
-                              print(_password);
-
-                              RegistryReponse registryReponse =
-                                  await ApiManager().Registry(
+                              Response response = await ApiManager().Registry(
                                 full_name: _name,
                                 email: _email,
                                 password: _password,
                               );
 
-                              if (registryReponse.message == check_email) {
+                              if (response.message == check_email_registry) {
                                 Toast(context, "Tài khoản đã tồn tại");
-                              } else if (registryReponse.message == "") {
+                              } else if (response.message == "") {
                                 Toast(context, "Đăng ký tài khoản thành công");
 
                                 Future.delayed(Duration(seconds: 2), () {

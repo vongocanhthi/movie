@@ -6,8 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/Util/util.dart';
+import 'package:movie/features/api/api_manager.dart';
 import 'package:movie/features/forgot_pasword/forgot_password_page.dart';
 import 'package:movie/features/home/home_page.dart';
+import 'package:movie/features/model/response.dart';
 import 'package:movie/features/register/register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,6 +18,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String _email = "";
+  String _password = "";
+
   @override
   void initState() {
     super.initState();
@@ -24,9 +29,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    String _email = "";
-    String _password = "";
-
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),
@@ -55,11 +57,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 20),
                   TextField(
-                    // onChanged: (value) {
-                    //   setState(() {
-                    //     _email = value;
-                    //   });
-                    // },
+                    onChanged: (value) {
+                      _email = value;
+                    },
                     decoration: InputDecoration(
                         hintText: "Email",
                         hintStyle:
@@ -72,11 +72,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 10),
                   TextField(
-                    // onChanged: (value) {
-                    //   setState(() {
-                    //     _password = value;
-                    //   });
-                    // },
+                    onChanged: (value) {
+                      _password = value;
+                    },
                     decoration: InputDecoration(
                         hintText: "Mật khẩu",
                         hintStyle:
@@ -99,13 +97,33 @@ class _LoginPageState extends State<LoginPage> {
                           fontSize: 15,
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ),
-                        );
+                      onPressed: () async {
+                        setState(() {});
+                        if (_email.isNotEmpty || _password.isNotEmpty) {
+                          Response response = await ApiManager().Login(
+                            email: _email,
+                            password: _password,
+                          );
+
+                          if (response.message == check_email_login) {
+                            Toast(context, "Tài khoản không tồn tại");
+                          } else if (response.message == check_password) {
+                            Toast(context, "Mật khẩu không chính xác");
+                          } else if (response.message == "") {
+                            Toast(context, "Đăng nhập thành công");
+
+                            Future.delayed(Duration(seconds: 2), () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomePage(),
+                                ),
+                              );
+                            });
+                          }
+                        } else {
+                          Toast(context, "Vui lòng nhập thông tin");
+                        }
                       },
                     ),
                   ),

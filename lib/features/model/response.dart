@@ -1,13 +1,13 @@
 import 'package:movie/features/model/user.dart';
 
-class RegistryReponse {
+class Response {
   bool error;
   int code;
   String message;
 
-  RegistryReponse({this.error, this.code, this.message});
+  Response({this.error, this.code, this.message});
 
-  factory RegistryReponse.fromJson(Map<String, dynamic> json) => RegistryReponse(
+  factory Response.fromJson(Map<String, dynamic> json) => Response(
     error: json["error"],
     code: json["code"],
     message: json["message"],
