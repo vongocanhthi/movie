@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/Util/util.dart';
+import 'package:movie/features/forgot_pasword/forgot_password_page.dart';
 import 'package:movie/features/home/home_page.dart';
 import 'package:movie/features/register/register_page.dart';
 
@@ -121,12 +122,12 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       onPressed: () {
-                        //todo
-                        // if(_name.isEmpty){
-                        //   Toast(context, "empty");
-                        // }else{
-                        //   Toast(context, _name + "abc");
-                        // }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgotPasswordPage(),
+                          ),
+                        );
                       },
                     ),
                   ),

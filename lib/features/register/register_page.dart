@@ -1,11 +1,15 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/Util/util.dart';
+import 'package:movie/features/api/api_manager.dart';
+import 'package:movie/features/model/registry.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -13,6 +17,11 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  String _name = "";
+  String _email = "";
+  String _password = "";
+  String _confirm_password = "";
+
   @override
   void initState() {
     super.initState();
@@ -21,12 +30,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    String _name = "1";
-    String _email = "";
-    String _password = "";
-    String _confirm_password = "";
-
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
@@ -39,237 +44,259 @@ class _RegisterPageState extends State<RegisterPage> {
           padding: EdgeInsets.only(left: 40, right: 40),
           child: Stack(
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      "Đăng ký",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 21,
-                          fontFamily: "UVN BaiSau"),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  SizedBox(height: 10),
-                  Visibility(
-                    child: Text(
-                      "Bạn chưa điền họ tên",
-                      style: TextStyle(
-                          color: yellow_color,
-                          fontSize: 12,
-                          fontFamily: "OpenSans Regular"),
-                    ),
-                    visible: false,
-                  ),
-                  // Text(_name + "123"),
-                  TextField(
-                    // controller: TextEditingController(),
-                    onChanged: (value) {
-                      this.setState(() {
-                        _name = value;
-                      });
-                    },
-                    decoration: InputDecoration(
-                        hintText: "Họ tên",
-                        hintStyle:
-                        TextStyle(color: Colors.white.withOpacity(0.7)),
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.7)))),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  SizedBox(height: 10),
-                  Visibility(
-                    child: Text(
-                      "Bạn chưa điền email",
-                      style: TextStyle(
-                          color: yellow_color,
-                          fontSize: 12,
-                          fontFamily: "OpenSans Regular"),
-                    ),
-                    visible: false,
-                  ),
-                  TextField(
-                    // onChanged: (value) {
-                    //   setState(() {
-                    //     _email = value;
-                    //   });
-                    // },
-                    decoration: InputDecoration(
-                        hintText: "Email",
-                        hintStyle:
-                        TextStyle(color: Colors.white.withOpacity(0.7)),
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.7)))),
-                    style: TextStyle(color: Colors.white),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  SizedBox(height: 10),
-                  Visibility(
-                    child: Text(
-                      "Bạn chưa tạo mật khẩu",
-                      style: TextStyle(
-                          color: yellow_color,
-                          fontSize: 12,
-                          fontFamily: "OpenSans Regular"),
-                    ),
-                    visible: false,
-                  ),
-                  TextField(
-                    // onChanged: (value) {
-                    //   setState(() {
-                    //     _password = value;
-                    //   });
-                    // },
-                    decoration: InputDecoration(
-                        hintText: "Mật khẩu",
-                        hintStyle:
-                        TextStyle(color: Colors.white.withOpacity(0.7)),
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.7)))),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  SizedBox(height: 10),
-                  Visibility(
-                    child: Text(
-                      "Bạn chưa xác nhận mật khẩu",
-                      style: TextStyle(
-                          color: yellow_color,
-                          fontSize: 12,
-                          fontFamily: "OpenSans Regular"),
-                    ),
-                    visible: false,
-                  ),
-                  TextField(
-                    // onChanged: (value) {
-                    //   setState(() {
-                    //     _confirm_password = value;
-                    //   });
-                    // },
-                    decoration: InputDecoration(
-                        hintText: "Xác nhận mật khẩu",
-                        hintStyle:
-                        TextStyle(color: Colors.white.withOpacity(0.7)),
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.white.withOpacity(0.7)))),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: RaisedButton(
-                      color: orange_color,
-                      child: Text(
-                        "Đăng ký",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "OpenSans Regular",
-                          fontSize: 15,
-                        ),
-                      ),
-                      onPressed: () {
-                        //todo
-                        // if(_name.isEmpty){
-                        //   Toast(context, "empty");
-                        // }else{
-                        //   Toast(context, _name + "abc");
-                        // }
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(height: 20),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Center(
-                      child: Image(
-                        width: 50,
-                        height: 50,
-                        image: AssetImage("assets/images/btnClose.png"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 10,
-                child: Align(
-                  alignment: FractionalOffset.bottomCenter,
+              Center(
+                child: SingleChildScrollView(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Bằng việc chọn vào nút Đăng ký, bạn đã đồng ý với",
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.white,
-                          fontFamily: "OpenSans SemiBold",
+                      Center(
+                        child: Text(
+                          "Đăng ký",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 21,
+                              fontFamily: "UVN BaiSau"),
                         ),
                       ),
-                      Row(
+                      SizedBox(height: 20),
+                      SizedBox(height: 10),
+                      Visibility(
+                        child: Text(
+                          "Bạn chưa điền họ tên",
+                          style: TextStyle(
+                              color: yellow_color,
+                              fontSize: 12,
+                              fontFamily: "OpenSans Regular"),
+                        ),
+                        visible: _name.isEmpty ? true : false,
+                      ),
+                      TextField(
+                        onChanged: (name) {
+                          _name = name;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Họ tên",
+                            hintStyle:
+                                TextStyle(color: Colors.white.withOpacity(0.7)),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.white.withOpacity(0.7)))),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      SizedBox(height: 10),
+                      Visibility(
+                        child: Text(
+                          "Bạn chưa điền email",
+                          style: TextStyle(
+                              color: yellow_color,
+                              fontSize: 12,
+                              fontFamily: "OpenSans Regular"),
+                        ),
+                        visible: _email.isEmpty ? true : false,
+                      ),
+                      TextField(
+                        onChanged: (email) {
+                          _email = email;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Email",
+                            hintStyle:
+                                TextStyle(color: Colors.white.withOpacity(0.7)),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.white.withOpacity(0.7)))),
+                        style: TextStyle(color: Colors.white),
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      SizedBox(height: 10),
+                      Visibility(
+                        child: Text(
+                          "Bạn chưa tạo mật khẩu",
+                          style: TextStyle(
+                              color: yellow_color,
+                              fontSize: 12,
+                              fontFamily: "OpenSans Regular"),
+                        ),
+                        visible: _password.isEmpty ? true : false,
+                      ),
+                      TextField(
+                        onChanged: (password) {
+                          _password = password;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Mật khẩu",
+                            hintStyle:
+                                TextStyle(color: Colors.white.withOpacity(0.7)),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.white.withOpacity(0.7)))),
+                        style: TextStyle(color: Colors.white),
+                        obscureText: true,
+                      ),
+                      SizedBox(height: 10),
+                      Visibility(
+                        child: Text(
+                          "Bạn chưa xác nhận mật khẩu",
+                          style: TextStyle(
+                              color: yellow_color,
+                              fontSize: 12,
+                              fontFamily: "OpenSans Regular"),
+                        ),
+                        visible: _confirm_password.isEmpty ||
+                                (_confirm_password != _password)
+                            ? true
+                            : false,
+                      ),
+                      TextField(
+                        onChanged: (confirm_password) {
+                          _confirm_password = confirm_password;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Xác nhận mật khẩu",
+                            hintStyle:
+                                TextStyle(color: Colors.white.withOpacity(0.7)),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.white.withOpacity(0.7)))),
+                        style: TextStyle(color: Colors.white),
+                        obscureText: true,
+                      ),
+                      SizedBox(height: 10),
+                      SizedBox(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: orange_color,
+                          child: Text(
+                            "Đăng ký",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "OpenSans Regular",
+                              fontSize: 15,
+                            ),
+                          ),
+                          onPressed: () async {
+                            //todo
+                            setState(() {});
+                            if (_name.isNotEmpty &&
+                                _email.isNotEmpty &&
+                                _password.isNotEmpty &&
+                                _confirm_password.isNotEmpty &&
+                                _confirm_password == _password) {
+                              print(_name);
+                              print(_email);
+                              print(_password);
+
+                              RegistryReponse registryReponse =
+                                  await ApiManager().Registry(
+                                full_name: _name,
+                                email: _email,
+                                password: _password,
+                              );
+
+                              if (registryReponse.message == check_email) {
+                                Toast(context, "Tài khoản đã tồn tại");
+                              } else if (registryReponse.message == "") {
+                                Toast(context, "Đăng ký tài khoản thành công");
+
+                                Future.delayed(Duration(seconds: 2), () {
+                                  Navigator.pop(context);
+                                });
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      SizedBox(height: 20),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Center(
+                          child: Image(
+                            width: 50,
+                            height: 50,
+                            image: AssetImage("assets/images/btnClose.png"),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 5),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Wrap(
+                    children: [
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          InkWell(
-                            child: Text(
-                              "Điều khoản sử dụng",
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                fontSize: 10,
-                                color: yellow_color,
-                                fontFamily: "OpenSans SemiBold",
-                              ),
-                            ),
-                            onTap: () {
-                              Toast(context, "Điều khoản sử dụng");
-                            },
-                          ),
                           Text(
-                            " và ",
+                            "Bằng việc chọn vào nút Đăng ký, bạn đã đồng ý với",
                             style: TextStyle(
                               fontSize: 10,
                               color: Colors.white,
                               fontFamily: "OpenSans SemiBold",
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              Toast(context, "Quy định bảo mật");
-                            },
-                            child: Text(
-                              "Quy định bảo mật",
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                fontSize: 10,
-                                color: yellow_color,
-                                fontFamily: "OpenSans SemiBold",
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                child: Text(
+                                  "Điều khoản sử dụng",
+                                  style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 10,
+                                    color: yellow_color,
+                                    fontFamily: "OpenSans SemiBold",
+                                  ),
+                                ),
+                                onTap: () {
+                                  Toast(context, "Điều khoản sử dụng");
+                                },
                               ),
-                            ),
-                          ),
-                          Text(
-                            " của Hfilm",
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
-                              fontFamily: "OpenSans SemiBold",
-                            ),
+                              Text(
+                                " và ",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.white,
+                                  fontFamily: "OpenSans SemiBold",
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Toast(context, "Quy định bảo mật");
+                                },
+                                child: Text(
+                                  "Quy định bảo mật",
+                                  style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 10,
+                                    color: yellow_color,
+                                    fontFamily: "OpenSans SemiBold",
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                " của Hfilm",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.white,
+                                  fontFamily: "OpenSans SemiBold",
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),

@@ -14,3 +14,5 @@ const yellow_color = Color(0xfffee901);
 const orange_color = Color(0xfffd6003);
 const view_color = Color(0xfffea46f);
 
+//text
+const check_email = "Email has been existed";

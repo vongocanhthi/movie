@@ -17,8 +17,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               } else {
-                return Text("");
+                return Center(child: CircularProgressIndicator());
               }
             },
           ),
