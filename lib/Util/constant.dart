@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 const base_url = "http://training-movie.bsp.vn:82/";
 const api_key = "app_token";
 const value_auth = "dCuW7UQMbdvpcBDfzolAOSGFIcAec11a";
+const youtube_api_key = "AIzaSyAY3ZBFmMApU4u3SsXbZfrcJkxBrgsApHE";
 
 //color
 const yellow_color = Color(0xfffee901);

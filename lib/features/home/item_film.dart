@@ -15,13 +15,17 @@ class ItemFilm extends StatefulWidget {
   ItemFilm(this._data);
 
   @override
-  State<ItemFilm> createState() => _ItemFilmState();
+  State<ItemFilm> createState() => _ItemFilmState(_data);
 }
 
 class _ItemFilmState extends State<ItemFilm> {
+  Data _data;
+
+  _ItemFilmState(this._data);
+
   @override
   Widget build(BuildContext context) {
-    var _title = widget._data.title.split(" / ");
+    var _title = _data.title.split(" / ");
     bool _isLike = false;
     String _imgLikeWhite = "assets/images/ic_like.png";
     String _imgLikeOrange = "assets/images/ic_like_orange.png";
@@ -90,9 +94,8 @@ class _ItemFilmState extends State<ItemFilm> {
                             child: Row(
                               children: [
                                 Image(
-                                  image: AssetImage("${_isLike
-                                      ? _imgLikeOrange
-                                      : _imgLikeWhite}"),
+                                  image: AssetImage(
+                                      "${_isLike ? _imgLikeOrange : _imgLikeWhite}"),
                                 ),
                                 SizedBox(width: 3),
                                 Text(
@@ -129,7 +132,7 @@ class _ItemFilmState extends State<ItemFilm> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => FilmDetailPage(),
+                                builder: (context) => FilmDetailPage(_data),
                               ),
                             );
                           },
