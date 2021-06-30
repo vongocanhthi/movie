@@ -145,9 +145,7 @@ class _ItemFilmState extends State<ItemFilm> {
             ),
           ],
         ),
-        Divider(
-          color: Colors.white,
-        )
+        divider_white,
       ],
     );
   }

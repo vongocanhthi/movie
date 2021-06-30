@@ -7,3 +7,6 @@ void Toast(BuildContext context, message) {
     content: Text(message),
   ));
 }
+
+const divider_white = Divider(color: Colors.white);
+const divider_black = Divider(color: Colors.black);
