@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/Util/util.dart';
+import 'package:movie/features/database/database_helper.dart';
 import 'package:movie/features/fillm_detail/film_detail_page.dart';
 import 'package:movie/features/model/data.dart';
+import 'package:movie/features/model/favorite.dart';
 
 class ItemFilm extends StatefulWidget {
   Data _data;
@@ -21,14 +22,16 @@ class ItemFilm extends StatefulWidget {
 class _ItemFilmState extends State<ItemFilm> {
   Data _data;
 
+  var _title;
+  bool _isLike = false;
+  String _imgLikeWhite = "assets/images/ic_like.png";
+  String _imgLikeOrange = "assets/images/ic_like_orange.png";
+
   _ItemFilmState(this._data);
 
   @override
   Widget build(BuildContext context) {
-    var _title = _data.title.split(" / ");
-    bool _isLike = false;
-    String _imgLikeWhite = "assets/images/ic_like.png";
-    String _imgLikeOrange = "assets/images/ic_like_orange.png";
+    _title = _data.title.split(" / ");
 
     return Column(
       children: [
@@ -38,7 +41,7 @@ class _ItemFilmState extends State<ItemFilm> {
           children: [
             Flexible(
               flex: 1,
-              child: Image.network("${widget._data.image}"),
+              child: Image.network("${_data.image}"),
             ),
             Flexible(
               flex: 2,
@@ -65,7 +68,7 @@ class _ItemFilmState extends State<ItemFilm> {
                       ),
                     ),
                     Text(
-                      "Lượt xem: ${widget._data.views}",
+                      "Lượt xem: ${_data.views}",
                       style: TextStyle(
                         fontFamily: "OpenSans Italic",
                         fontSize: 11,
@@ -75,7 +78,7 @@ class _ItemFilmState extends State<ItemFilm> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      "${widget._data.description}",
+                      "${_data.description}",
                       style: TextStyle(
                         fontFamily: "OpenSans Regular",
                         fontSize: 12,
@@ -95,26 +98,95 @@ class _ItemFilmState extends State<ItemFilm> {
                               children: [
                                 Image(
                                   image: AssetImage(
-                                      "${_isLike ? _imgLikeOrange : _imgLikeWhite}"),
+                                      "${_isLike
+                                          ? _imgLikeOrange
+                                          : _imgLikeWhite}"),
                                 ),
                                 SizedBox(width: 3),
                                 Text(
-                                  "Thích",
+                                  "${_isLike ? "Đã thích" : "Thích"}",
                                   style: TextStyle(
                                     fontFamily: "OpenSans Regular",
                                     fontSize: 13,
-                                    color: Colors.white,
+                                    color:
+                                    _isLike ? orange_color : Colors.white,
                                   ),
                                 ),
                               ],
                             ),
-                            onTap: () {
-                              // this.setState(() {
-                              // });
-                              _isLike ? false : true;
+                            onTap: () async {
+                              //todo
+                              setState(() {
+                                if (_isLike) {
+                                  _isLike = false;
+                                } else {
+                                  _isLike = true;
+                                }
+                              });
 
-                              Toast(context, "likee");
-                              print(_isLike);
+                              final favourite = Favourite(
+                                idMovie: _data.id,
+                                view: _data.views,
+                                like: true,
+                              );
+                              int i = await DatabaseHelper.instance.insert(favourite);
+                              print("i: $i");
+                            },
+                          ),
+                        ),
+                        RaisedButton(
+                          color: orange_color,
+                          child: Text(
+                            "Xem phim",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "OpenSans Regular",
+                              fontSize: 15,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FilmDetailPage(_data),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            child: Row(
+                              children: [
+                                Image(
+                                  image: AssetImage(
+                                      "${_isLike
+                                          ? _imgLikeOrange
+                                          : _imgLikeWhite}"),
+                                ),
+                                SizedBox(width: 3),
+                                Text(
+                                  "${_isLike ? "Đã thích" : "Thích"}",
+                                  style: TextStyle(
+                                    fontFamily: "OpenSans Regular",
+                                    fontSize: 13,
+                                    color:
+                                    _isLike ? orange_color : Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onTap: () async {
+                              //todo
+                              // List<Map<String, dynamic>> aaa =
+                              //     await DatabaseHelper.instance.queryAll();
+                              // print("a ${aaa}");
+                              // print("a ${aaa.length}");
                             },
                           ),
                         ),

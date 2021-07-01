@@ -12,42 +12,33 @@ import 'package:movie/features/model/data.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class FilmDetailPage extends StatefulWidget {
-  Data _data;
+  Data data;
 
-  FilmDetailPage(this._data);
+  FilmDetailPage(this.data);
 
   @override
-  State<FilmDetailPage> createState() => _FilmDetailPageState(_data);
+  State<FilmDetailPage> createState() => _FilmDetailPageState();
 }
 
 class _FilmDetailPageState extends State<FilmDetailPage> {
-  Data _data;
-
-  _FilmDetailPageState(this._data);
-
   YoutubePlayerController _controller;
+  bool _isLike = false;
+  String _imgLikeWhite = "assets/images/ic_like.png";
+  String _imgLikeOrange = "assets/images/ic_like_orange.png";
+  var _title;
+  String _videoId;
+
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    // _controller = YoutubePlayerController(
-    //   initialVideoId: _videoId,
-    //   flags: YoutubePlayerFlags(
-    //     autoPlay: true,
-    //     mute: false,
-    //   ),
-    // );
   }
 
   @override
   Widget build(BuildContext context) {
-    var _title = _data.title.split(" / ");
-    bool _isLike = false;
-    String _imgLikeWhite = "assets/images/ic_like.png";
-    String _imgLikeOrange = "assets/images/ic_like_orange.png";
-    String _videoId = YoutubePlayer.convertUrlToId(_data.link);
-    print(_data.link);
-    print(_videoId);
+    _title = widget.data.title.split(" / ");
+    _videoId = YoutubePlayer.convertUrlToId(widget.data.link);
+
     _controller = YoutubePlayerController(
       initialVideoId: _videoId,
       flags: YoutubePlayerFlags(
@@ -70,7 +61,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
         ),
         backgroundColor: orange_color,
         systemOverlayStyle:
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+            SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       body: Container(
         padding: EdgeInsets.all(10),
@@ -89,7 +80,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
               children: [
                 Flexible(
                   flex: 1,
-                  child: Image.network("${widget._data.image}"),
+                  child: Image.network("${widget.data.image}"),
                 ),
                 Flexible(
                   flex: 2,
@@ -108,7 +99,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                           ),
                         ),
                         Text(
-                          "Lượt xem: ${widget._data.views}",
+                          "Lượt xem: ${widget.data.views}",
                           style: TextStyle(
                             fontFamily: "OpenSans Italic",
                             fontSize: 11,
@@ -133,7 +124,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                             Flexible(
                               flex: 1,
                               child: Text(
-                                "${widget._data.category}",
+                                "${widget.data.category}",
                                 style: TextStyle(
                                   fontFamily: "OpenSans Regular",
                                   fontSize: 11,
@@ -159,7 +150,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                             Flexible(
                               flex: 1,
                               child: Text(
-                                "${widget._data.actor}",
+                                "${widget.data.actor}",
                                 style: TextStyle(
                                   fontFamily: "OpenSans Regular",
                                   fontSize: 11,
@@ -185,7 +176,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                             Flexible(
                               flex: 1,
                               child: Text(
-                                "${widget._data.director}",
+                                "${widget.data.director}",
                                 style: TextStyle(
                                   fontFamily: "OpenSans Regular",
                                   fontSize: 11,
@@ -211,7 +202,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                             Flexible(
                               flex: 1,
                               child: Text(
-                                "${widget._data.manufacturer}",
+                                "${widget.data.manufacturer}",
                                 style: TextStyle(
                                   fontFamily: "OpenSans Regular",
                                   fontSize: 11,
@@ -237,7 +228,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                             Flexible(
                               flex: 1,
                               child: Text(
-                                "${widget._data.duration} minute",
+                                "${widget.data.duration} minute",
                                 style: TextStyle(
                                   fontFamily: "OpenSans Regular",
                                   fontSize: 11,
@@ -253,9 +244,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                             children: [
                               Image(
                                 image: AssetImage(
-                                    "${_isLike
-                                        ? _imgLikeOrange
-                                        : _imgLikeWhite}"),
+                                    "${_isLike ? _imgLikeOrange : _imgLikeWhite}"),
                               ),
                               SizedBox(width: 3),
                               Text(
@@ -269,12 +258,12 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                             ],
                           ),
                           onTap: () {
-                            // this.setState(() {
-                            // });
-                            _isLike ? false : true;
+                            setState(() {
+                              _isLike ? false : true;
+
+                            });
 
                             Toast(context, "like");
-                            print(_isLike);
                           },
                         ),
                       ],
@@ -285,7 +274,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
             ),
             SizedBox(height: 10),
             Text(
-              "${widget._data.description}",
+              "${widget.data.description}",
               style: TextStyle(
                 fontFamily: "OpenSans Regular",
                 fontSize: 12,

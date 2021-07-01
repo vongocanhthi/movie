@@ -18,8 +18,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String _email = "";
-  String _password = "";
+  String _email = "anhthi000@gmail.com";
+  String _password = "123456";
 
   @override
   void initState() {
@@ -87,6 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                                   borderSide: BorderSide(
                                       color: Colors.white.withOpacity(0.7)))),
                           style: TextStyle(color: Colors.white),
+                          obscureText: true,
                         ),
                         SizedBox(height: 10),
                         SizedBox(
@@ -103,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             onPressed: () async {
                               setState(() {});
-                              if (_email.isNotEmpty || _password.isNotEmpty) {
+                              if (_email.isNotEmpty && _password.isNotEmpty) {
                                 Response response = await ApiManager().Login(
                                   email: _email,
                                   password: _password,
@@ -126,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                                   });
                                 }
                               } else {
-                                Toast(context, "Vui lòng nhập thông tin");
+                                Toast(context, "Vui lòng nhập thông tin tài khoản");
                               }
                             },
                           ),
