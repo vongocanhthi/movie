@@ -13,8 +13,11 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class FilmDetailPage extends StatefulWidget {
   Data data;
+  int isLike;
+  int views;
 
-  FilmDetailPage(this.data);
+
+  FilmDetailPage(this.data, this.isLike, this.views);
 
   @override
   State<FilmDetailPage> createState() => _FilmDetailPageState();
@@ -22,7 +25,7 @@ class FilmDetailPage extends StatefulWidget {
 
 class _FilmDetailPageState extends State<FilmDetailPage> {
   YoutubePlayerController _controller;
-  bool _isLike = false;
+  // bool isLike = false;
   String _imgLikeWhite = "assets/images/ic_like.png";
   String _imgLikeOrange = "assets/images/ic_like_orange.png";
   var _title;
@@ -99,7 +102,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                           ),
                         ),
                         Text(
-                          "Lượt xem: ${widget.data.views}",
+                          "Lượt xem: ${widget.views + 1}",
                           style: TextStyle(
                             fontFamily: "OpenSans Italic",
                             fontSize: 11,
@@ -244,22 +247,24 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                             children: [
                               Image(
                                 image: AssetImage(
-                                    "${_isLike ? _imgLikeOrange : _imgLikeWhite}"),
+                                    "${widget.isLike == 1 ? _imgLikeOrange : _imgLikeWhite}"),
                               ),
                               SizedBox(width: 3),
                               Text(
-                                "Thích",
+                                "${widget.isLike == 1 ? "Đã thích" : "Thích"}",
                                 style: TextStyle(
                                   fontFamily: "OpenSans Regular",
                                   fontSize: 13,
-                                  color: Colors.white,
+                                  color: widget.isLike == 1
+                                      ? orange_color
+                                      : Colors.white,
                                 ),
                               ),
                             ],
                           ),
                           onTap: () {
                             setState(() {
-                              _isLike ? false : true;
+                              // widget.isLike ? false : true;
 
                             });
 

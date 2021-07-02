@@ -21,6 +21,8 @@ class ItemFilm extends StatefulWidget {
 
 class _ItemFilmState extends State<ItemFilm> {
   Data _data;
+  int _isLike;
+  int _views;
 
   var _title;
   String _imgLikeWhite = "assets/images/ic_like.png";
@@ -53,10 +55,9 @@ class _ItemFilmState extends State<ItemFilm> {
     List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
     for (int i = 0; i < favouriteList.length; i++) {
       if (idMovie == favouriteList[i].idMovie) {
-        print("like ${favouriteList[i].like}");
         if (favouriteList[i].like == 1) {
           return 1;
-        }else{
+        } else {
           return 0;
         }
       }
@@ -104,8 +105,9 @@ class _ItemFilmState extends State<ItemFilm> {
                     FutureBuilder<int>(
                       future: setViews(_data.id),
                       builder: (context, snapshot) {
+                        _views = snapshot.data;
                         return Text(
-                          "Lượt xem: ${snapshot.data}",
+                          "Lượt xem: ${_views == null ? _data.views : _views}",
                           style: TextStyle(
                             fontFamily: "OpenSans Italic",
                             fontSize: 11,
@@ -133,11 +135,10 @@ class _ItemFilmState extends State<ItemFilm> {
                         Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            //todo
                             child: FutureBuilder<int>(
                               future: setLike(_data.id),
                               builder: (context, snapshot) {
-                                int _isLike = snapshot.data;
+                                _isLike = snapshot.data;
                                 return Row(
                                   children: [
                                     Image(
@@ -161,19 +162,30 @@ class _ItemFilmState extends State<ItemFilm> {
                             ),
                             onTap: () async {
                               //todo
-                              // if (_isLike) {
-                              //   _isLike = false;
-                              // } else {
-                              //   _isLike = true;
-                              //   final favourite = Favourite(
-                              //     idMovie: _data.id,
-                              //     view: _data.views,
-                              //     like: 1,
-                              //   );
-                              //   // int i = await DatabaseHelper.instance
-                              //   //     .insert(favourite);
-                              //   // print("i: $i");
-                              // }
+                              List<Favourite> favouriteList =
+                                  await DatabaseHelper.instance.queryAll();
+
+                              if (_isLike == 1) {
+                                _isLike = 0;
+                                Favourite favourite = Favourite(
+                                  id: favouriteList[_data.id - 1].id,
+                                  idMovie: _data.id,
+                                  view: favouriteList[_data.id - 1].view == null ? _data.views : favouriteList[_data.id - 1].view,
+                                  like: _isLike,
+                                );
+                                await DatabaseHelper.instance
+                                    .update(favourite);
+                              } else {
+                                _isLike = 1;
+                                Favourite favourite = Favourite(
+                                  id: favouriteList[_data.id - 1].id,
+                                  idMovie: _data.id,
+                                  view: favouriteList[_data.id - 1].view == null ? _data.views : favouriteList[_data.id - 1].view,
+                                  like: _isLike,
+                                );
+                                await DatabaseHelper.instance
+                                    .update(favourite);
+                              }
 
                               setState(() {});
                             },
@@ -193,7 +205,7 @@ class _ItemFilmState extends State<ItemFilm> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => FilmDetailPage(_data),
+                                builder: (context) => FilmDetailPage(_data, _isLike, _views),
                               ),
                             );
                           },

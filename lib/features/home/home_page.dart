@@ -19,14 +19,10 @@ class _HomePageState extends State<HomePage> {
 
   Future getFavouriteList() async {
     List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
-    print("all: ${favouriteList.length}");
     // for (int i = 0; i < favouriteList.length; i++) {
-    //   if (favouriteList[i].like == 1) {
-    //     _isLike = true;
-    //   } else {
-    //     _isLike = false;
-    //   }
+    //   print("like $i: ${favouriteList[i].like}");
     // }
+    print("${favouriteList.length}");
   }
 
   Future insertFavorite(int idMovie, int view, int like) async {
@@ -55,6 +51,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    //todo
     // deleteAllFavourite();
     getFavouriteList();
   }
@@ -93,7 +90,6 @@ class _HomePageState extends State<HomePage> {
                   _isInsertLocal = true;
                 }
 
-                getFavouriteList();
                 return Padding(
                   padding: EdgeInsets.all(10),
                   child: ListView.builder(

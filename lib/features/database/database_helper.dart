@@ -50,7 +50,8 @@ class DatabaseHelper {
 
   Future<List<Favourite>> queryAll() async {
     Database db = await instance.database;
-    final result = await db.query(_tableName,orderBy: "${DatabaseHelper.columeId} ASC");
+    final result =
+        await db.query(_tableName, orderBy: "${DatabaseHelper.columeId} ASC");
     return result.map((json) => Favourite.fromJson(json)).toList();
   }
 
@@ -59,11 +60,14 @@ class DatabaseHelper {
     return await db.insert(_tableName, favourite.toJson());
   }
 
-  Future<int> update(Map<String, dynamic> row) async {
+  Future<int> update(Favourite favourite) async {
     Database db = await instance.database;
-    int idMovie = row[columeIdMovie];
-    return await db.update(_tableName, row,
-        where: "$columeIdMovie = ? ", whereArgs: [idMovie]);
+    return await db.update(
+      _tableName,
+      favourite.toJson(),
+      where: '$columeIdMovie = ?',
+      whereArgs: [favourite.idMovie],
+    );
   }
 
   Future<int> delete(int idMovie) async {
