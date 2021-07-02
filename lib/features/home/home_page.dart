@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/features/api/api_manager.dart';
+import 'package:movie/features/database/database_helper.dart';
 import 'package:movie/features/model/data.dart';
+import 'package:movie/features/model/favorite.dart';
 
 import 'item_film.dart';
 
@@ -13,10 +15,48 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _isInsertLocal = false;
+
+  Future getFavouriteList() async {
+    List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
+    print("all: ${favouriteList.length}");
+    // for (int i = 0; i < favouriteList.length; i++) {
+    //   if (favouriteList[i].like == 1) {
+    //     _isLike = true;
+    //   } else {
+    //     _isLike = false;
+    //   }
+    // }
+  }
+
+  Future insertFavorite(int idMovie, int view, int like) async {
+    Favourite favourite = Favourite(
+      idMovie: idMovie,
+      view: view,
+      like: like,
+    );
+    List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
+    if(favouriteList.length < 10){
+      await DatabaseHelper.instance.insert(favourite);
+    }
+  }
+
+  Future deleteAllFavourite() async {
+    List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
+    print("${favouriteList.length}");
+    for (int i = 0; i < favouriteList.length; i++) {
+      await DatabaseHelper.instance.delete(favouriteList[i].idMovie);
+    }
+
+    print("delete: ${favouriteList.length}");
+  }
+
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    // deleteAllFavourite();
+    getFavouriteList();
   }
 
   @override
@@ -45,6 +85,15 @@ class _HomePageState extends State<HomePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<Data> _movieList = snapshot.data;
+                //todo
+                if(!_isInsertLocal){
+                  for(int i = 0; i<_movieList.length;i++){
+                    insertFavorite(_movieList[i].id, _movieList[i].views, 0);
+                  }
+                  _isInsertLocal = true;
+                }
+
+                getFavouriteList();
                 return Padding(
                   padding: EdgeInsets.all(10),
                   child: ListView.builder(

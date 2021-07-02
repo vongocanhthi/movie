@@ -23,11 +23,45 @@ class _ItemFilmState extends State<ItemFilm> {
   Data _data;
 
   var _title;
-  bool _isLike = false;
   String _imgLikeWhite = "assets/images/ic_like.png";
   String _imgLikeOrange = "assets/images/ic_like_orange.png";
 
   _ItemFilmState(this._data);
+
+  Future insertFavorite(int idMovie, int view, int like) async {
+    Favourite favourite = Favourite(
+      idMovie: idMovie,
+      view: view,
+      like: like,
+    );
+    List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
+    if (favouriteList.length <= 10) {
+      await DatabaseHelper.instance.insert(favourite);
+    }
+  }
+
+  Future<int> setViews(int idMovie) async {
+    List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
+    for (int i = 0; i < favouriteList.length; i++) {
+      if (idMovie == favouriteList[i].idMovie) {
+        return favouriteList[i].view;
+      }
+    }
+  }
+
+  Future<int> setLike(int idMovie) async {
+    List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
+    for (int i = 0; i < favouriteList.length; i++) {
+      if (idMovie == favouriteList[i].idMovie) {
+        print("like ${favouriteList[i].like}");
+        if (favouriteList[i].like == 1) {
+          return 1;
+        }else{
+          return 0;
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,14 +101,19 @@ class _ItemFilmState extends State<ItemFilm> {
                         color: Colors.white,
                       ),
                     ),
-                    Text(
-                      "Lượt xem: ${_data.views}",
-                      style: TextStyle(
-                        fontFamily: "OpenSans Italic",
-                        fontSize: 11,
-                        color: view_color,
-                        fontStyle: FontStyle.italic,
-                      ),
+                    FutureBuilder<int>(
+                      future: setViews(_data.id),
+                      builder: (context, snapshot) {
+                        return Text(
+                          "Lượt xem: ${snapshot.data}",
+                          style: TextStyle(
+                            fontFamily: "OpenSans Italic",
+                            fontSize: 11,
+                            color: view_color,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 10),
                     Text(
@@ -94,99 +133,49 @@ class _ItemFilmState extends State<ItemFilm> {
                         Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            child: Row(
-                              children: [
-                                Image(
-                                  image: AssetImage(
-                                      "${_isLike
-                                          ? _imgLikeOrange
-                                          : _imgLikeWhite}"),
-                                ),
-                                SizedBox(width: 3),
-                                Text(
-                                  "${_isLike ? "Đã thích" : "Thích"}",
-                                  style: TextStyle(
-                                    fontFamily: "OpenSans Regular",
-                                    fontSize: 13,
-                                    color:
-                                    _isLike ? orange_color : Colors.white,
-                                  ),
-                                ),
-                              ],
+                            //todo
+                            child: FutureBuilder<int>(
+                              future: setLike(_data.id),
+                              builder: (context, snapshot) {
+                                int _isLike = snapshot.data;
+                                return Row(
+                                  children: [
+                                    Image(
+                                      image: AssetImage(
+                                          "${_isLike == 1 ? _imgLikeOrange : _imgLikeWhite}"),
+                                    ),
+                                    SizedBox(width: 3),
+                                    Text(
+                                      "${_isLike == 1 ? "Đã thích" : "Thích"}",
+                                      style: TextStyle(
+                                        fontFamily: "OpenSans Regular",
+                                        fontSize: 13,
+                                        color: _isLike == 1
+                                            ? orange_color
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
                             onTap: () async {
                               //todo
-                              setState(() {
-                                if (_isLike) {
-                                  _isLike = false;
-                                } else {
-                                  _isLike = true;
-                                }
-                              });
+                              // if (_isLike) {
+                              //   _isLike = false;
+                              // } else {
+                              //   _isLike = true;
+                              //   final favourite = Favourite(
+                              //     idMovie: _data.id,
+                              //     view: _data.views,
+                              //     like: 1,
+                              //   );
+                              //   // int i = await DatabaseHelper.instance
+                              //   //     .insert(favourite);
+                              //   // print("i: $i");
+                              // }
 
-                              final favourite = Favourite(
-                                idMovie: _data.id,
-                                view: _data.views,
-                                like: true,
-                              );
-                              int i = await DatabaseHelper.instance.insert(favourite);
-                              print("i: $i");
-                            },
-                          ),
-                        ),
-                        RaisedButton(
-                          color: orange_color,
-                          child: Text(
-                            "Xem phim",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "OpenSans Regular",
-                              fontSize: 15,
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FilmDetailPage(_data),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            child: Row(
-                              children: [
-                                Image(
-                                  image: AssetImage(
-                                      "${_isLike
-                                          ? _imgLikeOrange
-                                          : _imgLikeWhite}"),
-                                ),
-                                SizedBox(width: 3),
-                                Text(
-                                  "${_isLike ? "Đã thích" : "Thích"}",
-                                  style: TextStyle(
-                                    fontFamily: "OpenSans Regular",
-                                    fontSize: 13,
-                                    color:
-                                    _isLike ? orange_color : Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onTap: () async {
-                              //todo
-                              // List<Map<String, dynamic>> aaa =
-                              //     await DatabaseHelper.instance.queryAll();
-                              // print("a ${aaa}");
-                              // print("a ${aaa.length}");
+                              setState(() {});
                             },
                           ),
                         ),

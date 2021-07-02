@@ -43,14 +43,15 @@ class DatabaseHelper {
         ${DatabaseHelper.columeId} $idType,
         ${DatabaseHelper.columeIdMovie} $integerType,
         ${DatabaseHelper.columeView} $integerType,
-        ${DatabaseHelper.columeLike} $boolType
+        ${DatabaseHelper.columeLike} $integerType
         )
         ''');
   }
 
-  Future<List<Map<String, dynamic>>> queryAll() async {
+  Future<List<Favourite>> queryAll() async {
     Database db = await instance.database;
-    return await db.query(_tableName);
+    final result = await db.query(_tableName,orderBy: "${DatabaseHelper.columeId} ASC");
+    return result.map((json) => Favourite.fromJson(json)).toList();
   }
 
   Future<int> insert(Favourite favourite) async {
