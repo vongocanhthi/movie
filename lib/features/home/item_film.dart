@@ -201,13 +201,16 @@ class _ItemFilmState extends State<ItemFilm> {
                               fontSize: 15,
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.push(
+                          onPressed: () async {
+                            int _view = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => FilmDetailPage(_data, _isLike, _views),
                               ),
                             );
+                            setState(() {
+
+                            });
                           },
                         ),
                       ],
