@@ -22,6 +22,11 @@ class _RegisterPageState extends State<RegisterPage> {
   String _password = "";
   String _confirm_password = "";
 
+  bool _nameVisible = false;
+  bool _emailVisible = false;
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -71,7 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     fontSize: 12,
                                     fontFamily: "OpenSans Regular"),
                               ),
-                              visible: _name.isEmpty ? true : false,
+                              visible: _nameVisible,
                             ),
                             TextField(
                               onChanged: (name) {
@@ -79,11 +84,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                               decoration: InputDecoration(
                                   hintText: "Họ tên",
-                                  hintStyle:
-                                  TextStyle(color: Colors.white.withOpacity(0.7)),
+                                  hintStyle: TextStyle(
+                                      color: Colors.white.withOpacity(0.7)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Colors.white.withOpacity(0.7)))),
+                                          color:
+                                              Colors.white.withOpacity(0.7)))),
                               style: TextStyle(color: Colors.white),
                             ),
                             SizedBox(height: 10),
@@ -95,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     fontSize: 12,
                                     fontFamily: "OpenSans Regular"),
                               ),
-                              visible: _email.isEmpty ? true : false,
+                              visible: _emailVisible,
                             ),
                             TextField(
                               onChanged: (email) {
@@ -103,11 +109,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                               decoration: InputDecoration(
                                   hintText: "Email",
-                                  hintStyle:
-                                  TextStyle(color: Colors.white.withOpacity(0.7)),
+                                  hintStyle: TextStyle(
+                                      color: Colors.white.withOpacity(0.7)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Colors.white.withOpacity(0.7)))),
+                                          color:
+                                              Colors.white.withOpacity(0.7)))),
                               style: TextStyle(color: Colors.white),
                               keyboardType: TextInputType.emailAddress,
                             ),
@@ -120,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     fontSize: 12,
                                     fontFamily: "OpenSans Regular"),
                               ),
-                              visible: _password.isEmpty ? true : false,
+                              visible: _passwordVisible,
                             ),
                             TextField(
                               onChanged: (password) {
@@ -128,39 +135,37 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                               decoration: InputDecoration(
                                   hintText: "Mật khẩu",
-                                  hintStyle:
-                                  TextStyle(color: Colors.white.withOpacity(0.7)),
+                                  hintStyle: TextStyle(
+                                      color: Colors.white.withOpacity(0.7)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Colors.white.withOpacity(0.7)))),
+                                          color:
+                                              Colors.white.withOpacity(0.7)))),
                               style: TextStyle(color: Colors.white),
                               obscureText: true,
                             ),
                             SizedBox(height: 10),
                             Visibility(
-                              child: Text(
-                                "Bạn chưa xác nhận mật khẩu",
-                                style: TextStyle(
-                                    color: yellow_color,
-                                    fontSize: 12,
-                                    fontFamily: "OpenSans Regular"),
-                              ),
-                              visible: _confirm_password.isEmpty ||
-                                  (_confirm_password != _password)
-                                  ? true
-                                  : false,
-                            ),
+                                child: Text(
+                                  "Bạn chưa xác nhận mật khẩu",
+                                  style: TextStyle(
+                                      color: yellow_color,
+                                      fontSize: 12,
+                                      fontFamily: "OpenSans Regular"),
+                                ),
+                                visible: _confirmPasswordVisible),
                             TextField(
                               onChanged: (confirm_password) {
                                 _confirm_password = confirm_password;
                               },
                               decoration: InputDecoration(
                                   hintText: "Xác nhận mật khẩu",
-                                  hintStyle:
-                                  TextStyle(color: Colors.white.withOpacity(0.7)),
+                                  hintStyle: TextStyle(
+                                      color: Colors.white.withOpacity(0.7)),
                                   enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Colors.white.withOpacity(0.7)))),
+                                          color:
+                                              Colors.white.withOpacity(0.7)))),
                               style: TextStyle(color: Colors.white),
                               obscureText: true,
                             ),
@@ -179,28 +184,43 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 onPressed: () async {
                                   //todo
-                                  setState(() {});
+                                  _nameVisible = _name.isEmpty ? true : false;
+                                  _emailVisible = _email.isEmpty ? true : false;
+                                  _passwordVisible =
+                                      _password.isEmpty ? true : false;
+                                  _confirmPasswordVisible =
+                                      _confirm_password.isEmpty ? true : false;
+
                                   if (_name.isNotEmpty &&
                                       _email.isNotEmpty &&
                                       _password.isNotEmpty &&
-                                      _confirm_password.isNotEmpty &&
-                                      _confirm_password == _password) {
-                                    Response response = await ApiManager().Registry(
+                                      _confirm_password.isNotEmpty) {
+                                    Response response =
+                                        await ApiManager().Registry(
                                       full_name: _name,
                                       email: _email,
                                       password: _password,
                                     );
 
-                                    if (response.message == check_email_registry) {
-                                      Toast(context, "Tài khoản đã tồn tại");
-                                    } else if (response.message == "") {
-                                      Toast(context, "Đăng ký tài khoản thành công");
+                                    if (_confirm_password == _password) {
+                                      if (response.message ==
+                                          check_email_registry) {
+                                        Toast(context, "Tài khoản đã tồn tại");
+                                      } else if (response.message == "") {
+                                        Toast(context,
+                                            "Đăng ký tài khoản thành công");
 
-                                      Future.delayed(Duration(seconds: 2), () {
-                                        Navigator.pop(context);
-                                      });
+                                        Future.delayed(Duration(seconds: 2),
+                                            () {
+                                          Navigator.pop(context);
+                                        });
+                                      }
+                                    } else {
+                                      Toast(
+                                          context, "Mật khẩu không trùng khớp");
                                     }
                                   }
+                                  setState(() {});
                                 },
                               ),
                             ),

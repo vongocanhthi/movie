@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Toast(context, "Đăng nhập thành công");
 
                                   Future.delayed(Duration(seconds: 1), () {
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => HomePage(),
