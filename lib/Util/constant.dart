@@ -18,3 +18,4 @@ const view_color = Color(0xfffea46f);
 const check_email_registry = "Email has been existed";
 const check_email_login = "Email cannot found";
 const check_password = "Wrong password";
+const check_forgot_password = "Something wrong, Please try again";

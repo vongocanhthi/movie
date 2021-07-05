@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/Util/util.dart';
+import 'package:movie/features/api/api_manager.dart';
+import 'package:movie/features/model/response.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   @override
@@ -79,11 +81,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 fontSize: 15,
                               ),
                             ),
-                            onPressed: () {
-                              if(_email.isEmpty){
+                            onPressed: () async {
+                              //todo
+                              if (_email.isEmpty) {
                                 Toast(context, "Vui lòng nhập email");
-                              }else{
-
+                              } else {
+                                var response = await ApiManager()
+                                    .getForgotPassword(_email);
+                                Toast(context, "${response}");
+                                // if (response.message == check_forgot_password) {
+                                //   Toast(context, check_forgot_password);
+                                // } else if (response.message.isEmpty) {
+                                //   Toast(context, "Vui lòng kiểm tra email");
+                                // }
                               }
                             },
                           ),

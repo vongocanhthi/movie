@@ -18,6 +18,20 @@ class ApiManager {
     }
   }
 
+  Future getForgotPassword(String email) async {
+    var response = await http.get(
+      "${base_url}user/forgot-password?email=${email}",
+      headers: {api_key: value_auth},
+    );
+
+    if (response.statusCode == 200) {
+      // return Response.fromJson(json.decode(response.body));
+      return response.body;
+    } else {
+      print("Error getMovieList");
+    }
+  }
+
   Future<Response> Registry(
       {String full_name, String email, String password}) async {
     var map = Map<String, String>();
