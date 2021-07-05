@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:loadmore/loadmore.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/features/api/api_manager.dart';
 import 'package:movie/features/database/database_helper.dart';
@@ -35,6 +34,14 @@ class _HomePageState extends State<HomePage> {
         _getMoreData();
       }
     });
+  }
+
+  Future<Null> _refresh() async {
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      _per_page = 10;
+    });
+    return null;
   }
 
   Future<void> _getMoreData() async {
@@ -71,13 +78,6 @@ class _HomePageState extends State<HomePage> {
     print("delete: ${favouriteList.length}");
   }
 
-  Future<bool> _loadMore() async {
-    print("onLoadMore");
-    await Future.delayed(Duration(seconds: 2));
-    _getMoreData();
-    return true;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,36 +98,39 @@ class _HomePageState extends State<HomePage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Container(
-          child: FutureBuilder<List<Data>>(
-            future: ApiManager().getMovieList(_per_page),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                //todo
-                _movieAllList = snapshot.data;
-                for (int i = 0; i < _movieAllList.length; i++) {
-                  insertFavorite(
-                      _movieAllList[i].id, _movieAllList[i].views, 0);
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          child: Container(
+            child: FutureBuilder<List<Data>>(
+              future: ApiManager().getMovieList(_per_page),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  //todo
+                  _movieAllList = snapshot.data;
+                  for (int i = 0; i < _movieAllList.length; i++) {
+                    insertFavorite(
+                        _movieAllList[i].id, _movieAllList[i].views, 0);
+                  }
+                  return Padding(
+                    padding: EdgeInsets.all(10),
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: _movieAllList.length,
+                      itemBuilder: (context, index) {
+                        Data _data = _movieAllList[index];
+                        if (index == _movieAllList.length - 1 &&
+                            _movieAllList.length < _per_page_max) {
+                          return CupertinoActivityIndicator();
+                        }
+                        return ItemFilm(_data);
+                      },
+                    ),
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
                 }
-                return Padding(
-                  padding: EdgeInsets.all(10),
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: _movieAllList.length,
-                    itemBuilder: (context, index) {
-                      Data _data = _movieAllList[index];
-                      if (index == _movieAllList.length - 1 &&
-                          _movieAllList.length < _per_page_max) {
-                        return CupertinoActivityIndicator();
-                      }
-                      return ItemFilm(_data);
-                    },
-                  ),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
+              },
+            ),
           ),
         ),
       ),
