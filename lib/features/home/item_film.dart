@@ -22,7 +22,7 @@ class ItemFilm extends StatefulWidget {
 class _ItemFilmState extends State<ItemFilm> {
   Data _data;
   int _isLike;
-  int _views;
+  int _viewLocal;
 
   var _title;
   String _imgLikeWhite = "assets/images/ic_like.png";
@@ -102,12 +102,13 @@ class _ItemFilmState extends State<ItemFilm> {
                         color: Colors.white,
                       ),
                     ),
+                    //todo
                     FutureBuilder<int>(
                       future: setViews(_data.id),
                       builder: (context, snapshot) {
-                        _views = snapshot.data;
+                        _viewLocal = snapshot.data;
                         return Text(
-                          "Lượt xem: ${_views == null ? _data.views : _views}",
+                          "Lượt xem: ${_viewLocal == null ? _data.views : _viewLocal}",
                           style: TextStyle(
                             fontFamily: "OpenSans Italic",
                             fontSize: 11,
@@ -162,30 +163,13 @@ class _ItemFilmState extends State<ItemFilm> {
                             ),
                             onTap: () async {
                               //todo
-                              List<Favourite> favouriteList =
-                                  await DatabaseHelper.instance.queryAll();
-
-                              if (_isLike == 1) {
-                                _isLike = 0;
-                                Favourite favourite = Favourite(
-                                  id: favouriteList[_data.id - 1].id,
-                                  idMovie: _data.id,
-                                  view: favouriteList[_data.id - 1].view == null ? _data.views : favouriteList[_data.id - 1].view,
-                                  like: _isLike,
-                                );
-                                await DatabaseHelper.instance
-                                    .update(favourite);
-                              } else {
-                                _isLike = 1;
-                                Favourite favourite = Favourite(
-                                  id: favouriteList[_data.id - 1].id,
-                                  idMovie: _data.id,
-                                  view: favouriteList[_data.id - 1].view == null ? _data.views : favouriteList[_data.id - 1].view,
-                                  like: _isLike,
-                                );
-                                await DatabaseHelper.instance
-                                    .update(favourite);
-                              }
+                              _isLike = _isLike == 1 ? 0 : 1;
+                              Favourite favourite = Favourite(
+                                idMovie: _data.id,
+                                view: _viewLocal,
+                                like: _isLike,
+                              );
+                              await DatabaseHelper.instance.update(favourite);
 
                               setState(() {});
                             },
@@ -202,15 +186,14 @@ class _ItemFilmState extends State<ItemFilm> {
                             ),
                           ),
                           onPressed: () async {
-                            int _view = await Navigator.push(
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => FilmDetailPage(_data, _isLike, _views),
+                                builder: (context) =>
+                                    FilmDetailPage(_data, _isLike, _viewLocal == null ? _data.views : _viewLocal),
                               ),
                             );
-                            setState(() {
-
-                            });
+                            setState(() {});
                           },
                         ),
                       ],

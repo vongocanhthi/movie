@@ -33,7 +33,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
 
   int _maxLineSeeMore = 5;
   bool _isSeeMore = false;
-  int _view;
+  int _viewUpdate = 0;
 
   @override
   void initState() {
@@ -41,11 +41,23 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
+  Future _updateViews() async {
+    // List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
+
+    Favourite favourite = Favourite(
+      // id: favouriteList[widget.data.id - 1].id,
+      idMovie: widget.data.id,
+      view: _viewUpdate,
+      like: widget.isLike,
+    );
+    await DatabaseHelper.instance.update(favourite);
+  }
+
   @override
   Widget build(BuildContext context) {
     _title = widget.data.title.split(" / ");
     _videoId = YoutubePlayer.convertUrlToId(widget.data.link);
-    _view = widget.views + 1;
+    _viewUpdate = widget.views + 1;
 
     _controller = YoutubePlayerController(
       initialVideoId: _videoId,
@@ -56,19 +68,10 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
     );
 
     return WillPopScope(
-      onWillPop: () async {
-        List<Favourite> favouriteList =
-            await DatabaseHelper.instance.queryAll();
+      onWillPop: () {
+        _updateViews();
 
-        Favourite favourite = Favourite(
-          id: favouriteList[widget.data.id - 1].id,
-          idMovie: widget.data.id,
-          view: _view,
-          like: widget.isLike,
-        );
-        await DatabaseHelper.instance.update(favourite);
-
-        Navigator.pop(context, _view);
+        Navigator.pop(context, _viewUpdate);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -124,7 +127,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                             ),
                             //todo
                             Text(
-                              "Lượt xem: $_view",
+                              "Lượt xem: $_viewUpdate",
                               style: TextStyle(
                                 fontFamily: "OpenSans Italic",
                                 fontSize: 11,
@@ -291,7 +294,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                                 if (widget.isLike == 1) {
                                   widget.isLike = 0;
                                   Favourite favourite = Favourite(
-                                    id: favouriteList[widget.data.id - 1].id,
+                                    // id: favouriteList[widget.data.id - 1].id,
                                     idMovie: widget.data.id,
                                     view: favouriteList[widget.data.id - 1]
                                                 .view ==
@@ -306,7 +309,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                                 } else {
                                   widget.isLike = 1;
                                   Favourite favourite = Favourite(
-                                    id: favouriteList[widget.data.id - 1].id,
+                                    // id: favouriteList[widget.data.id - 1].id,
                                     idMovie: widget.data.id,
                                     view: favouriteList[widget.data.id - 1]
                                                 .view ==

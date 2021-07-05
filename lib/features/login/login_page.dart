@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                                 } else if (response.message == "") {
                                   Toast(context, "Đăng nhập thành công");
 
-                                  Future.delayed(Duration(seconds: 2), () {
+                                  Future.delayed(Duration(seconds: 1), () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

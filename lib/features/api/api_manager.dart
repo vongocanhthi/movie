@@ -5,9 +5,9 @@ import 'package:movie/features/model/data.dart';
 import 'package:movie/features/model/response.dart';
 
 class ApiManager {
-  Future<List<Data>> getMovieList() async {
+  Future<List<Data>> getMovieList(int per_page) async {
     var response = await http.get(
-      "${base_url}movie/list",
+      "${base_url}movie/list?per_page=${per_page}",
       headers: {api_key: value_auth},
     );
     if (response.statusCode == 200) {

@@ -51,7 +51,7 @@ class DatabaseHelper {
   Future<List<Favourite>> queryAll() async {
     Database db = await instance.database;
     final result =
-        await db.query(_tableName, orderBy: "${DatabaseHelper.columeId} ASC");
+        await db.query(_tableName, orderBy: "${DatabaseHelper.columeIdMovie} ASC");
     return result.map((json) => Favourite.fromJson(json)).toList();
   }
 
