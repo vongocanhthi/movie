@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "296635348572",
+    "project_id": "flutter-login-6-7-2021",
+    "storage_bucket": "flutter-login-6-7-2021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296635348572:android:cee0de2fda88cc6c771899",
+        "android_client_info": {
+          "package_name": "com.vnat.movie.movie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "296635348572-6di6d2nok8hfuht27iljej6r1i9qq3fq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vnat.movie.movie",
+            "certificate_hash": "3061abf9cea54c02cd1ce134485136bdd862e68f"
+          }
+        },
+        {
+          "client_id": "296635348572-ecduu2bjr1edsndo76d51ph3b5ifee9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6xaAM-clE1uwORPpKLuk32o1vIGj_cSY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "296635348572-ecduu2bjr1edsndo76d51ph3b5ifee9e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
