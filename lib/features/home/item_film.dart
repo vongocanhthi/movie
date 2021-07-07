@@ -9,6 +9,7 @@ import 'package:movie/features/database/database_helper.dart';
 import 'package:movie/features/fillm_detail/film_detail_page.dart';
 import 'package:movie/features/model/data.dart';
 import 'package:movie/features/model/favorite.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ItemFilm extends StatefulWidget {
   Data _data;
@@ -188,9 +189,14 @@ class _ItemFilmState extends State<ItemFilm> {
                           onPressed: () async {
                             await Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    FilmDetailPage(_data, _isLike, _viewLocal == null ? _data.views : _viewLocal),
+                              PageTransition(
+                                child: FilmDetailPage(
+                                    _data,
+                                    _isLike,
+                                    _viewLocal == null
+                                        ? _data.views
+                                        : _viewLocal),
+                                type: PageTransitionType.rightToLeft,
                               ),
                             );
                             setState(() {});

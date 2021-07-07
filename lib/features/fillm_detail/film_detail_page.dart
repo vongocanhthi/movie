@@ -10,6 +10,7 @@ import 'package:movie/Util/constant.dart';
 import 'package:movie/features/database/database_helper.dart';
 import 'package:movie/features/model/data.dart';
 import 'package:movie/features/model/favorite.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:social_share/social_share.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -70,7 +71,10 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
       onWillPop: () {
         _updateViews();
 
-        Navigator.pop(context, _viewUpdate);
+        Navigator.pop(
+          context,
+          _viewUpdate,
+        );
       },
       child: Scaffold(
         appBar: AppBar(
