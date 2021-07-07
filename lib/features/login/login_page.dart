@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/Util/util.dart';
 import 'package:movie/features/api/api_manager.dart';
@@ -13,7 +14,6 @@ import 'package:movie/features/forgot_pasword/forgot_password_page.dart';
 import 'package:movie/features/home/home_page.dart';
 import 'package:movie/features/model/response.dart';
 import 'package:movie/features/register/register_page.dart';
-import 'package:path/path.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -25,16 +25,38 @@ class _LoginPageState extends State<LoginPage> {
 
   String _message = 'Log in/out by pressing the buttons below.';
 
-  // String _email = "";
-  // String _password = "";
-  String _email = "anhthi000@gmail.com";
-  String _password = "123456";
+  String _email = "";
+  String _password = "";
+
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([]);
+
   }
+
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
+  Future<void> _loginGoogle(BuildContext context) async {
+    try {
+      await _googleSignIn.signIn().then((value) {
+        print("value: $value");
+        if(value != null){
+          _loginSuccess(context);
+        }
+      });
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> _handleSignOut() => _googleSignIn.disconnect();
 
   Future<Null> _loginFb(BuildContext context) async {
     final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
@@ -177,7 +199,6 @@ class _LoginPageState extends State<LoginPage> {
                                 } else if (response.message == "") {
                                   Toast(context, "Đăng nhập thành công");
 
-                                  //todo
                                   Future.delayed(Duration(seconds: 1), () {
                                     _loginSuccess(context);
                                   });
@@ -218,8 +239,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         GoogleSignInButton(
                           onPressed: () {
-                            // _handleSignIn();
-                            // GoogleManeger().signInWithGoogle();
+                            if (_googleSignIn != null) {
+                              _handleSignOut();
+                            }
+                            _loginGoogle(context);
                           },
                         ),
                       ],
