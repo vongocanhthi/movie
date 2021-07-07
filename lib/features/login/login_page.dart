@@ -25,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
 
   String _message = 'Log in/out by pressing the buttons below.';
 
+  // String _email = "";
+  // String _password = "";
   String _email = "anhthi000@gmail.com";
   String _password = "123456";
 
@@ -87,6 +89,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(

@@ -7,10 +7,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie/Util/constant.dart';
-import 'package:movie/Util/util.dart';
 import 'package:movie/features/database/database_helper.dart';
 import 'package:movie/features/model/data.dart';
 import 'package:movie/features/model/favorite.dart';
+import 'package:social_share/social_share.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class FilmDetailPage extends StatefulWidget {
@@ -45,7 +45,6 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
     // List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
 
     Favourite favourite = Favourite(
-      // id: favouriteList[widget.data.id - 1].id,
       idMovie: widget.data.id,
       view: _viewUpdate,
       like: widget.isLike,
@@ -267,64 +266,103 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                               ],
                             ),
                             SizedBox(height: 10),
-                            InkWell(
-                              child: Row(
-                                children: [
-                                  Image(
-                                    image: AssetImage(
-                                        "${widget.isLike == 1 ? _imgLikeOrange : _imgLikeWhite}"),
-                                  ),
-                                  SizedBox(width: 3),
-                                  Text(
-                                    "${widget.isLike == 1 ? "Đã thích" : "Thích"}",
-                                    style: TextStyle(
-                                      fontFamily: "OpenSans Regular",
-                                      fontSize: 13,
-                                      color: widget.isLike == 1
-                                          ? orange_color
-                                          : Colors.white,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    child: Row(
+                                      children: [
+                                        Image(
+                                          image: AssetImage(
+                                              "${widget.isLike == 1 ? _imgLikeOrange : _imgLikeWhite}"),
+                                        ),
+                                        SizedBox(width: 3),
+                                        Text(
+                                          "${widget.isLike == 1 ? "Đã thích" : "Thích"}",
+                                          style: TextStyle(
+                                            fontFamily: "OpenSans Regular",
+                                            fontSize: 13,
+                                            color: widget.isLike == 1
+                                                ? orange_color
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    onTap: () async {
+                                      List<Favourite> favouriteList =
+                                          await DatabaseHelper.instance
+                                              .queryAll();
+
+                                      if (widget.isLike == 1) {
+                                        widget.isLike = 0;
+                                        Favourite favourite = Favourite(
+                                          idMovie: widget.data.id,
+                                          view:
+                                              favouriteList[widget.data.id - 1]
+                                                          .view ==
+                                                      null
+                                                  ? widget.data.views
+                                                  : favouriteList[
+                                                          widget.data.id - 1]
+                                                      .view,
+                                          like: widget.isLike,
+                                        );
+                                        await DatabaseHelper.instance
+                                            .update(favourite);
+                                      } else {
+                                        widget.isLike = 1;
+                                        Favourite favourite = Favourite(
+                                          idMovie: widget.data.id,
+                                          view:
+                                              favouriteList[widget.data.id - 1]
+                                                          .view ==
+                                                      null
+                                                  ? widget.data.views
+                                                  : favouriteList[
+                                                          widget.data.id - 1]
+                                                      .view,
+                                          like: widget.isLike,
+                                        );
+                                        await DatabaseHelper.instance
+                                            .update(favourite);
+                                      }
+
+                                      setState(() {});
+                                    },
                                   ),
-                                ],
-                              ),
-                              onTap: () async {
-                                List<Favourite> favouriteList =
-                                    await DatabaseHelper.instance.queryAll();
-
-                                if (widget.isLike == 1) {
-                                  widget.isLike = 0;
-                                  Favourite favourite = Favourite(
-                                    // id: favouriteList[widget.data.id - 1].id,
-                                    idMovie: widget.data.id,
-                                    view: favouriteList[widget.data.id - 1]
-                                                .view ==
-                                            null
-                                        ? widget.data.views
-                                        : favouriteList[widget.data.id - 1]
-                                            .view,
-                                    like: widget.isLike,
-                                  );
-                                  await DatabaseHelper.instance
-                                      .update(favourite);
-                                } else {
-                                  widget.isLike = 1;
-                                  Favourite favourite = Favourite(
-                                    // id: favouriteList[widget.data.id - 1].id,
-                                    idMovie: widget.data.id,
-                                    view: favouriteList[widget.data.id - 1]
-                                                .view ==
-                                            null
-                                        ? widget.data.views
-                                        : favouriteList[widget.data.id - 1]
-                                            .view,
-                                    like: widget.isLike,
-                                  );
-                                  await DatabaseHelper.instance
-                                      .update(favourite);
-                                }
-
-                                setState(() {});
-                              },
+                                ),
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.share,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
+                                        SizedBox(width: 3),
+                                        Text(
+                                          "Chia sẻ",
+                                          style: TextStyle(
+                                            fontFamily: "OpenSans Regular",
+                                            fontSize: 13,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    //todo
+                                    onTap: () {
+                                      SocialShare.shareOptions(
+                                          "${widget.data.description}\n\n${widget.data.link}");
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
