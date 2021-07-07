@@ -120,7 +120,13 @@ class _HomePageState extends State<HomePage> {
                         Data _data = _movieAllList[index];
                         if (index == _movieAllList.length - 1 &&
                             _movieAllList.length < _per_page_max) {
-                          return CupertinoActivityIndicator();
+                          return Theme(
+                            data: ThemeData(
+                                cupertinoOverrideTheme: CupertinoThemeData(brightness: Brightness.dark)),
+                            child: CupertinoActivityIndicator(
+                              radius: 20,
+                            ),
+                          );
                         }
                         return ItemFilm(_data);
                       },
