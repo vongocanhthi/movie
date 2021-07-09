@@ -5,23 +5,23 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/Util/util.dart';
-import 'package:movie/features/database/database_helper.dart';
 import 'package:movie/features/fillm_detail/film_detail_page.dart';
+import 'package:movie/features/home/home_viewmodel.dart';
 import 'package:movie/features/model/data.dart';
 import 'package:movie/features/model/favorite.dart';
 import 'package:page_transition/page_transition.dart';
 
 class ItemFilm extends StatefulWidget {
-  Data _data;
+  HomeViewModel model;
+  Data data;
 
-  ItemFilm(this._data);
+  ItemFilm(this.model, this.data);
 
   @override
-  State<ItemFilm> createState() => _ItemFilmState(_data);
+  State<ItemFilm> createState() => _ItemFilmState();
 }
 
 class _ItemFilmState extends State<ItemFilm> {
-  Data _data;
   int _isLike;
   int _viewLocal;
 
@@ -29,45 +29,9 @@ class _ItemFilmState extends State<ItemFilm> {
   String _imgLikeWhite = "assets/images/ic_like.png";
   String _imgLikeOrange = "assets/images/ic_like_orange.png";
 
-  _ItemFilmState(this._data);
-
-  Future insertFavorite(int idMovie, int view, int like) async {
-    Favourite favourite = Favourite(
-      idMovie: idMovie,
-      view: view,
-      like: like,
-    );
-    List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
-    if (favouriteList.length <= 10) {
-      await DatabaseHelper.instance.insert(favourite);
-    }
-  }
-
-  Future<int> setViews(int idMovie) async {
-    List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
-    for (int i = 0; i < favouriteList.length; i++) {
-      if (idMovie == favouriteList[i].idMovie) {
-        return favouriteList[i].view;
-      }
-    }
-  }
-
-  Future<int> setLike(int idMovie) async {
-    List<Favourite> favouriteList = await DatabaseHelper.instance.queryAll();
-    for (int i = 0; i < favouriteList.length; i++) {
-      if (idMovie == favouriteList[i].idMovie) {
-        if (favouriteList[i].like == 1) {
-          return 1;
-        } else {
-          return 0;
-        }
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    _title = _data.title.split(" / ");
+    _title = widget.data.title.split(" / ");
 
     return Column(
       children: [
@@ -77,7 +41,7 @@ class _ItemFilmState extends State<ItemFilm> {
           children: [
             Flexible(
               flex: 1,
-              child: Image.network("${_data.image}"),
+              child: Image.network("${widget.data.image}"),
             ),
             Flexible(
               flex: 2,
@@ -105,11 +69,11 @@ class _ItemFilmState extends State<ItemFilm> {
                     ),
                     //todo
                     FutureBuilder<int>(
-                      future: setViews(_data.id),
+                      future: widget.model.setViews(widget.data.id),
                       builder: (context, snapshot) {
                         _viewLocal = snapshot.data;
                         return Text(
-                          "Lượt xem: ${_viewLocal == null ? _data.views : _viewLocal}",
+                          "Lượt xem: ${_viewLocal == null ? widget.data.views : _viewLocal}",
                           style: TextStyle(
                             fontFamily: "OpenSans Italic",
                             fontSize: 11,
@@ -121,7 +85,7 @@ class _ItemFilmState extends State<ItemFilm> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      "${_data.description}",
+                      "${widget.data.description}",
                       style: TextStyle(
                         fontFamily: "OpenSans Regular",
                         fontSize: 12,
@@ -138,7 +102,7 @@ class _ItemFilmState extends State<ItemFilm> {
                           color: Colors.transparent,
                           child: InkWell(
                             child: FutureBuilder<int>(
-                              future: setLike(_data.id),
+                              future: widget.model.setLike(widget.data.id),
                               builder: (context, snapshot) {
                                 _isLike = snapshot.data;
                                 return Row(
@@ -166,12 +130,12 @@ class _ItemFilmState extends State<ItemFilm> {
                               //todo
                               _isLike = _isLike == 1 ? 0 : 1;
                               Favourite favourite = Favourite(
-                                idMovie: _data.id,
+                                idMovie: widget.data.id,
                                 view: _viewLocal,
                                 like: _isLike,
                               );
-                              await DatabaseHelper.instance.update(favourite);
 
+                              widget.model.updateMovie(favourite);
                               setState(() {});
                             },
                           ),
@@ -191,10 +155,10 @@ class _ItemFilmState extends State<ItemFilm> {
                               context,
                               PageTransition(
                                 child: FilmDetailPage(
-                                    _data,
+                                    widget.data,
                                     _isLike,
                                     _viewLocal == null
-                                        ? _data.views
+                                        ? widget.data.views
                                         : _viewLocal),
                                 type: PageTransitionType.rightToLeft,
                               ),

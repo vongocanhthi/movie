@@ -37,6 +37,7 @@ dependencies:
   social_share: ^2.1.1
   google_sign_in: any
   page_transition: ^2.0.2
+  stacked: ^2.2.2
 
 dev_dependencies:
   flutter_test:
