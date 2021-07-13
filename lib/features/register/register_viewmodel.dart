@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:movie/features/api/api_manager.dart';
+import 'package:movie/features/api/service.dart';
 import 'package:movie/features/model/response.dart';
 import 'package:movie/util/constant.dart';
 import 'package:movie/util/util.dart';
@@ -12,7 +12,7 @@ class RegisterViewModel extends BaseViewModel {
         _email.isNotEmpty &&
         _password.isNotEmpty &&
         _confirm_password.isNotEmpty) {
-      Response response = await ApiManager().Registry(
+      Response response = await Service().Registry(
         full_name: _name,
         email: _email,
         password: _password,

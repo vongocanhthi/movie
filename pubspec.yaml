@@ -38,6 +38,13 @@ dependencies:
   google_sign_in: any
   page_transition: ^2.0.2
   stacked: ^2.2.2
+  shared_preferences: ^2.0.6
+  google_maps_flutter: ^2.0.6
+  permission_handler: any
+  android_intent: ^2.0.2
+  flutter_search_bar: ^2.1.0
+  geolocator: any
+  app_settings: ^4.1.1
 
 dev_dependencies:
   flutter_test:

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie/Util/constant.dart';
-import 'package:movie/features/api/api_manager.dart';
+import 'package:movie/features/api/service.dart';
 import 'package:movie/features/database/database_helper.dart';
 import 'package:movie/features/model/data.dart';
 import 'package:movie/features/model/favorite.dart';
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
             onRefresh: _refresh,
             child: Container(
               child: FutureBuilder<List<Data>>(
-                future: ApiManager().getMovieList(_per_page),
+                future: Service().getMovieList(_per_page),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     _movieAllList = snapshot.data;

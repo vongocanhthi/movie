@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/Util/util.dart';
-import 'package:movie/features/api/api_manager.dart';
+import 'package:movie/features/api/service.dart';
 import 'package:movie/features/model/response.dart';
 import 'package:movie/features/register/register_viewmodel.dart';
 import 'package:stacked/stacked.dart';

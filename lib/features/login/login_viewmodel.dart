@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie/features/api/api_manager.dart';
+import 'package:movie/features/api/service.dart';
 import 'package:movie/features/home/home_page.dart';
 import 'package:movie/features/model/response.dart';
 import 'package:movie/util/constant.dart';
 import 'package:movie/util/util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 
 class LoginViewModel extends BaseViewModel{
-
   Future<void> loginWithEmail(BuildContext context, String email, String password) async {
     if (email.isNotEmpty && password.isNotEmpty) {
-      Response response = await ApiManager().Login(
+      Response response = await Service().Login(
         email: email,
         password: password,
       );

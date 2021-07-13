@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 //api
-const base_url = "http://training-movie.bsp.vn:82/";
-const api_key = "app_token";
-const value_auth = "dCuW7UQMbdvpcBDfzolAOSGFIcAec11a";
-const youtube_api_key = "AIzaSyAY3ZBFmMApU4u3SsXbZfrcJkxBrgsApHE";
-const facebook_app_id = "245613610371387";
+const String base_url = "http://training-movie.bsp.vn:82/";
+const String api_key = "app_token";
+const String value_auth = "dCuW7UQMbdvpcBDfzolAOSGFIcAec11a";
+const String youtube_api_key = "AIzaSyAY3ZBFmMApU4u3SsXbZfrcJkxBrgsApHE";
+const String facebook_app_id = "245613610371387";
+const String api_key_google_map = "AIzaSyCeQCNhccKEBofr8BxCqWGTts78YDVV_Tk";
+
 
 //color
 const yellow_color = Color(0xfffee901);

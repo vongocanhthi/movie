@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:io' show Platform;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,15 +7,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:movie/Util/constant.dart';
 import 'package:movie/Util/util.dart';
-import 'package:movie/features/api/api_manager.dart';
 import 'package:movie/features/forgot_pasword/forgot_password_page.dart';
 import 'package:movie/features/home/home_page.dart';
 import 'package:movie/features/login/login_viewmodel.dart';
-import 'package:movie/features/model/response.dart';
+import 'package:movie/features/map/map_page.dart';
 import 'package:movie/features/register/register_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 
 class LoginPage extends StatefulWidget {
@@ -24,18 +26,52 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   FacebookLogin facebookSignIn = new FacebookLogin();
+  SharedPreferences _prefs;
 
   String _message = 'Log in/out by pressing the buttons below.';
 
   String _email = "";
   String _password = "";
-
+  bool _isRemember = false;
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([]);
 
+    init();
+
+    // setState(() {
+    //   getSharedPreferences();
+    //   print("_email $_email");
+    //   print("_password $_password");
+    // });
+  }
+
+  Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
+  Future<void> getSharedPreferences() async {
+    init();
+    _email = _prefs.getString("email") == null ? "" : _prefs.getString("email");
+    _password = _prefs.getString("password") ?? "";
+    _isRemember = _prefs.getBool("remember") ?? false;
+  }
+
+  Future<void> setSharedPreferences() async {
+    init();
+    _prefs.setString("email", _email);
+    _prefs.setString("password", _password);
+    _prefs.setBool("remember", true);
+    _prefs.commit();
+  }
+
+  Future<void> resetSharedPreferences() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    await _prefs.setString("email", "");
+    await _prefs.setString("password", "");
+    await _prefs.setBool("remember", false);
   }
 
   GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -49,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await _googleSignIn.signIn().then((value) {
         print("value: $value");
-        if(value != null){
+        if (value != null) {
           _loginSuccess(context);
         }
       });
@@ -115,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
     return ViewModelBuilder<LoginViewModel>.reactive(
       viewModelBuilder: () => LoginViewModel(),
       onModelReady: (model) => model.initialised,
-      builder:(context, model, child) => Scaffold(
+      builder: (context, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
           constraints: BoxConstraints.expand(),
@@ -176,7 +212,32 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(color: Colors.white),
                             obscureText: true,
                           ),
-                          SizedBox(height: 10),
+                          // Row(
+                          //   //todo
+                          //   children: [
+                          //     Checkbox(
+                          //       value: _isRemember,
+                          //       onChanged: (value) {
+                          //         setState(() {
+                          //           _isRemember = value;
+                          //           // if (_isRemember) {
+                          //           //   _isRemember = true;
+                          //           // } else {
+                          //           //   _isRemember = false;
+                          //           // }
+                          //         });
+                          //       },
+                          //     ),
+                          //     Text(
+                          //       "Nhớ mật khẩu",
+                          //       style: TextStyle(
+                          //         color: Colors.white,
+                          //         fontFamily: "OpenSans Regular",
+                          //         fontSize: 14,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                           SizedBox(
                             width: double.infinity,
                             child: RaisedButton(
@@ -189,9 +250,20 @@ class _LoginPageState extends State<LoginPage> {
                                   fontSize: 15,
                                 ),
                               ),
-                              onPressed: () async {
-                                setState(() {});
-                                model.loginWithEmail(context, _email, _password);
+                              onPressed: () {
+                                setState(() {
+
+                                });
+                                // if (_isRemember) {
+                                setSharedPreferences();
+                                // } else {
+                                //   resetSharedPreferences();
+                                // }
+                                model.loginWithEmail(
+                                    context, _email, _password);
+
+                                print("a_email $_email");
+                                print("a_password $_password");
                               },
                             ),
                           ),
@@ -219,7 +291,9 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           FacebookSignInButton(
                             onPressed: () {
-                              _loginFb(context);
+                              if (Platform.isAndroid) {
+                                _loginFb(context);
+                              }
                             },
                           ),
                           GoogleSignInButton(
@@ -229,6 +303,28 @@ class _LoginPageState extends State<LoginPage> {
                               }
                               _loginGoogle(context);
                             },
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: RaisedButton(
+                              color: Colors.white.withOpacity(0.2),
+                              child: Text(
+                                "Chức năng khác",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "OpenSans Regular",
+                                  fontSize: 13,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MapPage(),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),

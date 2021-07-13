@@ -2,9 +2,24 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:movie/Util/constant.dart';
 import 'package:movie/features/model/data.dart';
+import 'package:movie/features/model/place.dart';
 import 'package:movie/features/model/response.dart';
 
-class ApiManager {
+class Service {
+  Future<List<Place>> getPlaceList(String input) async {
+    var response = await http.get(
+      Uri.parse(
+        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&key=$api_key_google_map",
+      ),
+    );
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body)["predictions"];
+      return jsonResponse.map((data) => Place.fromJson(data)).toList();
+    } else {
+      print("Error getPlaceList");
+    }
+  }
+
   Future<List<Data>> getMovieList(int per_page) async {
     var response = await http.get(
       "${base_url}movie/list?per_page=${per_page}",
