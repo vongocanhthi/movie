@@ -21,6 +21,7 @@ class _MapPageState extends State<MapPage> {
   SearchBar _searchBar;
   String _input = "";
   bool _isShowResultAddress = false;
+  List<Marker> _allMarker = [];
 
   List<String> _mapTypeTextList = [
     "None",
@@ -45,12 +46,23 @@ class _MapPageState extends State<MapPage> {
     super.initState();
     _checkPermission();
 
+    _allMarker.add(
+      Marker(
+        markerId: MarkerId("BSP"),
+        position: LatLng(10.844198891289125, 106.63532358687642),
+        onTap: () {
+          print("BSP");
+        },
+      ),
+    );
+
     _searchBar = new SearchBar(
       inBar: false,
       setState: setState,
       onSubmitted: (value) {
         //todo
         _input = value;
+        _isShowResultAddress = true;
       },
       onCleared: () {
         print("cleared");
@@ -65,12 +77,14 @@ class _MapPageState extends State<MapPage> {
             child: Text("Google Map"),
           ),
           actions: [
-            GestureDetector(
-              onTap: () {
-                _searchBar.getSearchAction(context);
-                print("aa");
-              },
-            )
+            _searchBar.getSearchAction(context),
+            // GestureDetector(
+            //   onTap: () {
+            //     setState(() {
+            //       _isShowResultAddress = false;
+            //     });
+            //   },
+            // )
           ],
         );
       },
@@ -151,7 +165,7 @@ class _MapPageState extends State<MapPage> {
               Expanded(
                 child: GoogleMap(
                   initialCameraPosition: CameraPosition(
-                    target: LatLng(37.4219999, -122.0862462),
+                    target: LatLng(10.844198891289125, 106.63532358687642),
                   ),
                   onMapCreated: (controller) {
                     _googleMapController = controller;
@@ -164,44 +178,48 @@ class _MapPageState extends State<MapPage> {
                   tiltGesturesEnabled: false,
                   zoomControlsEnabled: false,
                   zoomGesturesEnabled: true,
+                  markers: Set.from(_allMarker),
+                ),
+              ),
+              Visibility(
+                visible: _isShowResultAddress ? true : false,
+                child: FutureBuilder<List<Place>>(
+                  future: Service().getPlaceList(_input),
+                  builder: (context, snapshot) {
+                    List<Place> _placeList = snapshot.data;
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        itemCount: _placeList.length > 5 ? 5 : _placeList
+                            .length,
+                        itemBuilder: (context, index) {
+                          return Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                print("${_placeList[index].description}");
+                              },
+                              child: Container(
+                                color: Colors.white,
+                                child: ListTile(
+                                  title: Text(
+                                      "${_placeList[index].description}"),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Center(
+                        child: CupertinoActivityIndicator(),
+                      );
+                    }
+                  },
                 ),
               ),
             ],
           ),
-          Visibility(
-            visible: _isShowResultAddress ? true : false,
-            child: FutureBuilder<List<Place>>(
-              future: Service().getPlaceList(_input),
-              builder: (context, snapshot) {
-                List<Place> _placeList = snapshot.data;
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    itemCount: _placeList.length > 5 ? 5 : _placeList.length,
-                    itemBuilder: (context, index) {
-                      return Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            print("${_placeList[index].description}");
-                          },
-                          child: Container(
-                            color: Colors.white,
-                            child: ListTile(
-                              title: Text("${_placeList[index].description}"),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return Center(
-                    child: CupertinoActivityIndicator(),
-                  );
-                }
-              },
-            ),
-          ),
+
         ],
       ),
       // floatingActionButton: FloatingActionButton(

@@ -304,28 +304,29 @@ class _LoginPageState extends State<LoginPage> {
                               _loginGoogle(context);
                             },
                           ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: RaisedButton(
-                              color: Colors.white.withOpacity(0.2),
-                              child: Text(
-                                "Chức năng khác",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "OpenSans Regular",
-                                  fontSize: 13,
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MapPage(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                          //todo
+                          // SizedBox(
+                          //   width: double.infinity,
+                          //   child: RaisedButton(
+                          //     color: Colors.white.withOpacity(0.2),
+                          //     child: Text(
+                          //       "Chức năng khác",
+                          //       style: TextStyle(
+                          //         color: Colors.white,
+                          //         fontFamily: "OpenSans Regular",
+                          //         fontSize: 13,
+                          //       ),
+                          //     ),
+                          //     onPressed: () {
+                          //       Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder: (context) => MapPage(),
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
