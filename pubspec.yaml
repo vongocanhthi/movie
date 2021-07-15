@@ -45,6 +45,8 @@ dependencies:
   flutter_search_bar: ^2.1.0
   geolocator: any
   app_settings: ^4.1.1
+  timezone: ^0.7.0
+  flutter_local_notifications: any
 
 dev_dependencies:
   flutter_test:
