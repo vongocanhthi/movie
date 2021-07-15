@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:movie/features/api/service.dart';
 import 'package:movie/features/model/place.dart';
+import 'package:movie/util/constant.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:app_settings/app_settings.dart';
 
@@ -56,7 +57,7 @@ class _MapPageState extends State<MapPage> {
       ),
     );
 
-    _searchBar = new SearchBar(
+    _searchBar = SearchBar(
       inBar: false,
       setState: setState,
       onSubmitted: (value) {
@@ -73,11 +74,11 @@ class _MapPageState extends State<MapPage> {
       hintText: "Search address",
       buildDefaultAppBar: (BuildContext context) {
         return AppBar(
-          title: Center(
-            child: Text("Google Map"),
-          ),
+          centerTitle: true,
+          backgroundColor: orange_color,
+          title: Text("Google Map"),
           actions: [
-            _searchBar.getSearchAction(context),
+            // _searchBar.getSearchAction(context),
             // GestureDetector(
             //   onTap: () {
             //     setState(() {
@@ -189,8 +190,8 @@ class _MapPageState extends State<MapPage> {
                     List<Place> _placeList = snapshot.data;
                     if (snapshot.hasData) {
                       return ListView.builder(
-                        itemCount: _placeList.length > 5 ? 5 : _placeList
-                            .length,
+                        itemCount:
+                            _placeList.length > 5 ? 5 : _placeList.length,
                         itemBuilder: (context, index) {
                           return Material(
                             color: Colors.transparent,
@@ -201,8 +202,8 @@ class _MapPageState extends State<MapPage> {
                               child: Container(
                                 color: Colors.white,
                                 child: ListTile(
-                                  title: Text(
-                                      "${_placeList[index].description}"),
+                                  title:
+                                      Text("${_placeList[index].description}"),
                                 ),
                               ),
                             ),
@@ -219,7 +220,6 @@ class _MapPageState extends State<MapPage> {
               ),
             ],
           ),
-
         ],
       ),
       // floatingActionButton: FloatingActionButton(
