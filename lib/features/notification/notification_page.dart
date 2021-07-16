@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:movie/features/bottom_bar/bottom_bar.dart';
 import 'package:movie/features/home/home_page.dart';
 import 'package:movie/util/constant.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationPage extends StatefulWidget {
   @override
@@ -53,12 +53,12 @@ class _NotificationPageState extends State<NotificationPage> {
               },
               child: Text("showNotification"),
             ),
-            ElevatedButton(
-              onPressed: () {
-
-              },
-              child: Text("showFullScreenNotification"),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //
+            //   },
+            //   child: Text("showFullScreenNotification"),
+            // ),
             ElevatedButton(
               onPressed: () {
                 _showNotificationWithNoBody();
