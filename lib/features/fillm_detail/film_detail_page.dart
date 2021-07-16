@@ -21,7 +21,7 @@ class FilmDetailPage extends StatefulWidget {
   int isLike;
   int views;
 
-  FilmDetailPage(this.data, this.isLike, this.views);
+  FilmDetailPage({this.data, this.isLike, this.views});
 
   @override
   State<FilmDetailPage> createState() => _FilmDetailPageState();

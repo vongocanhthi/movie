@@ -168,6 +168,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     _movieAllList = snapshot.data;
+                    NotificationPage.movieList = _movieAllList;
                     for (int i = 0; i < _movieAllList.length; i++) {
                       model.insertFavorite(
                           _movieAllList[i].id, _movieAllList[i].views, 0);

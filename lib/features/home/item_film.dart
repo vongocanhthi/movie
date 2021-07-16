@@ -155,9 +155,9 @@ class _ItemFilmState extends State<ItemFilm> {
                               context,
                               PageTransition(
                                 child: FilmDetailPage(
-                                    widget.data,
-                                    _isLike,
-                                    _viewLocal == null
+                                    data: widget.data,
+                                    isLike: _isLike,
+                                    views: _viewLocal == null
                                         ? widget.data.views
                                         : _viewLocal),
                                 type: PageTransitionType.rightToLeft,
