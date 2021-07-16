@@ -24,11 +24,20 @@ class _NotificationPageState extends State<NotificationPage> {
       FlutterLocalNotificationsPlugin();
   Favourite _favourite;
   Data _data;
+  var _title;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    shuffle(NotificationPage.movieList);
+    for (int i = 0; i < NotificationPage.movieList.length; i++) {
+      _data = NotificationPage.movieList[0];
+      break;
+    }
+
+    _title = _data.title.split(" / ");
+
     flutterLocalNotificationsPlugin.initialize(
       InitializationSettings(
         AndroidInitializationSettings("@mipmap/ic_launcher"),
@@ -42,16 +51,14 @@ class _NotificationPageState extends State<NotificationPage> {
           _favourite = favouriteList[0];
           break;
         }
-        print("size ${NotificationPage.movieList.length}");
-        shuffle(NotificationPage.movieList);
-        for (int i = 0; i < NotificationPage.movieList.length; i++) {
-          _data = NotificationPage.movieList[0];
-          break;
-        }
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FilmDetailPage(data: _data,isLike: _favourite.like,views: _favourite.view,),
+            builder: (context) => FilmDetailPage(
+              data: _data,
+              isLike: _favourite.like,
+              views: _favourite.view,
+            ),
           ),
         );
       },
@@ -82,12 +89,12 @@ class _NotificationPageState extends State<NotificationPage> {
             //   },
             //   child: Text("showFullScreenNotification"),
             // ),
-            ElevatedButton(
-              onPressed: () {
-                _showNotificationWithNoBody();
-              },
-              child: Text("showNotificationWithNoBody"),
-            )
+            // ElevatedButton(
+            //   onPressed: () {
+            //     _showNotificationWithNoBody();
+            //   },
+            //   child: Text("showNotificationWithNoBody"),
+            // )
           ],
         ),
       ),
@@ -119,7 +126,10 @@ class _NotificationPageState extends State<NotificationPage> {
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        0, 'plain title', 'plain body', platformChannelSpecifics,
+        0,
+        "${_title[0]}",
+        "${_title.length == 2 ? _title[1] : _title[0]}",
+        platformChannelSpecifics,
         payload: 'item x');
   }
 
